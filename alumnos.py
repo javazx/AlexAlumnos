@@ -19,8 +19,8 @@ def create_table():
             id_alumno INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             NombreAlumno TEXT(250) NOT NULL,
             EdadAlumno INTEGER NOT NULL,
-            CorreoAlumno TEXT,
-            TelefonoAlumno INTEGER NOT NULL
+            Semestre TEXT,
+            Genero TEXT(1) NOT NULL
         );
     ''')
     conn.commit()
@@ -29,11 +29,11 @@ def create_table():
 # Funciones CRUD
 
 
-def add_alumno(nombre, edad, correo, telefono):
+def add_alumno(nombre, edad, semestre, genero):
     conn = init_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO Alumno (NombreAlumno, EdadAlumno, CorreoAlumno, TelefonoAlumno) VALUES (?, ?, ?, ?)',
-                   (nombre, edad, correo, telefono))
+    cursor.execute('INSERT INTO Alumno (NombreAlumno, EdadAlumno, Semestre, Genero) VALUES (?, ?, ?, ?)',
+                   (nombre, edad, semestre, genero))
     conn.commit()
     conn.close()
 
@@ -46,14 +46,14 @@ def delete_alumno(id_alumno):
     conn.close()
 
 
-def update_alumno(id_alumno, nombre, edad, correo, telefono):
+def update_alumno(id_alumno, nombre, edad, semestre, genero):
     conn = init_connection()
     cursor = conn.cursor()
     cursor.execute('''
         UPDATE Alumno
-        SET NombreAlumno = ?, EdadAlumno = ?, CorreoAlumno = ?, TelefonoAlumno = ?
+        SET NombreAlumno = ?, EdadAlumno = ?, Semestre = ?, Genero = ?
         WHERE id_alumno = ?
-    ''', (nombre, edad, correo, telefono, id_alumno))
+    ''', (nombre, edad, semestre, genero, id_alumno))
     conn.commit()
     conn.close()
 
@@ -74,7 +74,8 @@ create_table()
 st.title('Gestión de Alumnos 👨‍🎓')
 
 # Agregar logo
-st.sidebar.image('img\logo.jpg', width=250)
+st.sidebar.image(
+    'http://cbt2drmariojosemolinahenriquez.mx/assets/img/logo.jpg', width=250)
 # Opciones de navegación
 menu = ['Agregar Alumno', 'Actualizar Alumno',
         'Eliminar Alumno', 'Visualizar Datos']
@@ -84,12 +85,11 @@ if choice == 'Agregar Alumno':
     st.subheader('Agregar Alumno')
     nombre = st.text_input('Nombre')
     edad = st.number_input('Edad', min_value=0)
-    correo = st.text_input('Correo')
-    telefono = st.number_input(
-        'Teléfono', min_value=0, max_value=9999999999, step=1, format="%i")
+    semestre = st.text_input('Semestre')
+    genero = st.text_input('Genero')
 
     if st.button('Agregar'):
-        add_alumno(nombre, edad, correo, telefono)
+        add_alumno(nombre, edad, semestre, genero)
         st.success('Alumno agregado exitosamente')
 
 elif choice == 'Actualizar Alumno':
@@ -97,12 +97,11 @@ elif choice == 'Actualizar Alumno':
     id_alumno = st.number_input('ID Alumno', min_value=1)
     nombre = st.text_input('Nombre')
     edad = st.number_input('Edad', min_value=1)
-    correo = st.text_input('Correo')
-    telefono = st.number_input(
-        'Teléfono', min_value=1000000000, max_value=9999999999)
+    semestre = st.text_input('Semestre')
+    genero = st.text_input('Genero')
 
     if st.button('Actualizar'):
-        update_alumno(id_alumno, nombre, edad, correo, telefono)
+        update_alumno(id_alumno, nombre, edad, semestre, genero)
         st.success('Alumno actualizado exitosamente')
 
 elif choice == 'Eliminar Alumno':
@@ -118,7 +117,7 @@ elif choice == 'Visualizar Datos':
     alumnos = get_alumnos()
     if alumnos:
         df = pd.DataFrame(alumnos, columns=[
-                          'ID', 'Nombre', 'Edad', 'Correo', 'Teléfono'])
+                          'ID', 'Nombre', 'Edad', 'Semestre', 'Genero'])
         st.dataframe(df)
     else:
         st.write('No hay datos para mostrar.')
