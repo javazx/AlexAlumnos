@@ -75,7 +75,7 @@ st.title('Gestión de Alumnos 👨‍🎓')
 
 # Agregar logo
 st.sidebar.image(
-    'http://cbt2drmariojosemolinahenriquez.mx/assets/img/logo.jpg', width=250)
+    'https://pbs.twimg.com/profile_images/1588650015936987144/txXevZFe_400x400.jpg', width=250)
 # Opciones de navegación
 menu = ['Agregar Alumno', 'Actualizar Alumno',
         'Eliminar Alumno', 'Visualizar Datos']
